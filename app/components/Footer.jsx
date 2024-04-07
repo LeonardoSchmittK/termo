@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useBearStore from "../state";
 
 function Footer() {
@@ -8,6 +8,8 @@ function Footer() {
   const setWordGrammarCorrect = useBearStore(
     (state) => state.setWordGrammarCorrect
   );
+  const [timesWon, setTimesWon] = useState("");
+  const hasWon = useBearStore((state) => state.hasWon);
 
   async function getData() {
     const data = await fetch("http://localhost:3000/api/word").then((d) => {
@@ -28,6 +30,12 @@ function Footer() {
     reset();
     getData();
   }
+
+  useEffect(() => {
+    if (typeof window !== undefined && localStorage.getItem("timesWon")) {
+      setTimesWon(localStorage.getItem("timesWon"));
+    }
+  }, [hasWon]);
 
   return (
     <footer className="md:p-10 mt-4 w-full">
@@ -57,22 +65,13 @@ function Footer() {
         Try again
       </button>
       <h4 className="text-gray-400">
-        {localStorage.getItem("timesWon")?.length} Acertos |
-        {localStorage.getItem("timesWon").length > 0 &&
-          localStorage.getItem("timesWon").length < 5 &&
-          " Level 1 | Aprendiz"}
-        {localStorage.getItem("timesWon").length > 5 &&
-          localStorage.getItem("timesWon").length < 15 &&
-          " Level 2 | Mago"}
-        {localStorage.getItem("timesWon").length > 15 &&
-          localStorage.getItem("timesWon").length < 30 &&
-          " Level 3 | O Cara"}
-        {localStorage.getItem("timesWon").length > 30 &&
-          localStorage.getItem("timesWon").length < 40 &&
-          " Level 4 | O Rei"}
-        {localStorage.getItem("timesWon").length > 40 &&
-          localStorage.getItem("timesWon").length < 50 &&
-          " Level 5 | Expert"}
+        {timesWon?.length} Acertos |
+        {timesWon?.length > 0 && timesWon?.length < 5 && " Level 1 | Aprendiz"}
+        {timesWon?.length > 5 && timesWon?.length < 15 && " Level 2 | Mago"}
+        {timesWon?.length > 15 && timesWon?.length < 30 && " Level 3 | O Cara"}
+        {timesWon?.length > 30 && timesWon?.length < 40 && " Level 4 | O Rei"}
+        {timesWon?.length > 40 && timesWon?.length < 50 && " Level 5 | Expert"}
+        {timesWon?.length > 50 && " Level 6 | Campeão"}
       </h4>
     </footer>
   );
