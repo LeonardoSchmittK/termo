@@ -14,7 +14,7 @@ export default function TableGame() {
     console.log(wordsApplied + "<<<< counter of words applied\n");
   }, [wordsApplied]);
 
-  function update(): ReactNode {
+  function update() {
     return new Array(wordsApplied).fill("").map((item, id) => {
       return (
         <div key={id} className="grid grid-cols-5 gap-3 px-3 py-3 rounded-xl ">

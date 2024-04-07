@@ -7,7 +7,7 @@ const initialState = {
   wordsApplied: 0,
   wordPut: "",
   wordsHistoric: [],
-  wordGrammarCorrect: "furia",
+  wordGrammarCorrect: "fúria",
 };
 
 const useBearStore = create((set) => ({
