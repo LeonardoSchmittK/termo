@@ -3,7 +3,13 @@ import useBearStore from "../state";
 import { AnimatePresence, motion } from "framer-motion";
 
 function Input() {
-  const inputRefs = Array.from({ length: 5 }, () => useRef(null));
+  const inputRefs = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null),
+  ];
   const [counter, setCounter] = useState(0);
   const [word, setWord] = useState(new Array(5).fill(""));
   const incrementWord = useBearStore((state) => state.increaseWordsApplied);

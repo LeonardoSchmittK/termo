@@ -36,7 +36,7 @@ export default function Home() {
     }
 
     getData();
-  }, []);
+  }, [setWord, setWordGrammarCorrect]);
 
   const decorateOptions = (defaultOptions) => {
     return {

@@ -10,10 +10,8 @@ export default function TableGame() {
   const hasWon = useBearStore((state) => state.hasWon);
   const wordPut = useBearStore((state) => state.wordPut);
   const wordGrammarCorrect = useBearStore((state) => state.wordGrammarCorrect);
-  const [wordsEls, setWordsEls] = useState("");
   useEffect(() => {
     console.log(wordsApplied + "<<<< counter of words applied\n");
-    setWordsEls(wordsEls + "x");
   }, [wordsApplied]);
 
   function update(): ReactNode {

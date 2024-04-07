@@ -968,8 +968,10 @@ const words = [
 
 const wordsTest = ["anciã", "útero"];
 
-export default (req, res) => {
+function getData(req, res) {
   res
     .status(200)
     .json({ word: words[Math.floor(Math.random() * words.length)] });
-};
+}
+
+export default getData;
