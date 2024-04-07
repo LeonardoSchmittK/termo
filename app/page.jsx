@@ -21,7 +21,9 @@ export default function Home() {
 
   useEffect(() => {
     async function getData() {
-      const data = await fetch("http://localhost:3000/api/word").then((d) => {
+      const data = await fetch(
+        "https://termoback.onrender.com/words/random"
+      ).then((d) => {
         d.json().then(({ word }) => {
           const wordNotGramaticallyCorrect = word
             .normalize("NFD")
