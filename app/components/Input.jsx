@@ -58,14 +58,14 @@ function Input() {
 
       if (rightWord == incorrectWord) {
         setHasWon(true);
-        if (localStorage.getItem("timesWon")) {
-          localStorage.setItem(
-            "timesWon",
-            localStorage.getItem("timesWon") + "1"
-          );
-        } else {
-          localStorage.setItem("timesWon", "1");
-        }
+        // if (localStorage.getItem("timesWon")) {
+        //   localStorage.setItem(
+        //     "timesWon",
+        //     localStorage.getItem("timesWon") + "1"
+        //   );
+        // } else {
+        //   localStorage.setItem("timesWon", "1");
+        // }
       }
     }
   }

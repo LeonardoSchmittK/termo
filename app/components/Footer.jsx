@@ -64,7 +64,7 @@ function Footer() {
         </svg>
         Try again
       </button>
-      <h4 className="text-gray-400">
+      {/* <h4 className="text-gray-400">
         {timesWon?.length} Acertos |
         {timesWon?.length > 0 && timesWon?.length < 5 && " Level 1 | Aprendiz"}
         {timesWon?.length > 5 && timesWon?.length < 15 && " Level 2 | Mago"}
@@ -72,7 +72,7 @@ function Footer() {
         {timesWon?.length > 30 && timesWon?.length < 40 && " Level 4 | O Rei"}
         {timesWon?.length > 40 && timesWon?.length < 50 && " Level 5 | Expert"}
         {timesWon?.length > 50 && " Level 6 | Campeão"}
-      </h4>
+      </h4> */}
     </footer>
   );
 }
