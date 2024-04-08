@@ -12,20 +12,20 @@ function Footer() {
   const hasWon = useBearStore((state) => state.hasWon);
 
   async function getData() {
-    const data = await fetch(
-      "https://termoback.onrender.com/words/random"
-    ).then((d) => {
-      d.json().then(({ word }) => {
-        const wordNotGramaticallyCorrect = word
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[~^`]+/g, "")
-          .trim();
-        setWord(wordNotGramaticallyCorrect);
-        setWordGrammarCorrect(word);
-        console.log(word);
-      });
-    });
+    const data = await fetch("https://termo-back.vercel.app/words/random").then(
+      (d) => {
+        d.json().then(({ word }) => {
+          const wordNotGramaticallyCorrect = word
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[~^`]+/g, "")
+            .trim();
+          setWord(wordNotGramaticallyCorrect);
+          setWordGrammarCorrect(word);
+          console.log(word);
+        });
+      }
+    );
   }
 
   function handleClick() {

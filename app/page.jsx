@@ -22,7 +22,7 @@ export default function Home() {
   useEffect(() => {
     async function getData() {
       const data = await fetch(
-        "https://termoback.onrender.com/words/random"
+        "https://termo-back.vercel.app/words/random"
       ).then((d) => {
         d.json().then(({ word }) => {
           const wordNotGramaticallyCorrect = word
