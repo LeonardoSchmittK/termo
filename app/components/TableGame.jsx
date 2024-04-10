@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, use, ReactNode } from "react";
 import Input from "./Input";
 import useBearStore from "../state";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function TableGame() {
   const wordsApplied = useBearStore((state) => state.wordsApplied);
@@ -10,9 +11,8 @@ export default function TableGame() {
   const hasWon = useBearStore((state) => state.hasWon);
   const wordPut = useBearStore((state) => state.wordPut);
   const wordGrammarCorrect = useBearStore((state) => state.wordGrammarCorrect);
-  useEffect(() => {
-    console.log(wordsApplied + "<<<< counter of words applied\n");
-  }, [wordsApplied]);
+
+  const animateConfig = { opacity: 0, x: -20 };
 
   function update() {
     return new Array(wordsApplied).fill("").map((item, id) => {
@@ -114,26 +114,59 @@ export default function TableGame() {
 
         {wordsApplied >= 5 && !hasWon && (
           <div className="grid grid-cols-5 md:gap-3 px-3 py-3 rounded-xl">
-            <div className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center">
+            <motion.div
+              initial={animateConfig}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.1, delay: 0 * 0.2 }}
+              className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            >
               {" "}
               {wordGrammarCorrect[0]}
-            </div>
-            <div className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center">
+            </motion.div>
+            <motion.div
+              initial={animateConfig}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.1, delay: 1 * 0.2 }}
+              className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            >
               {" "}
               {wordGrammarCorrect[1]}
-            </div>
-            <div className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center">
+            </motion.div>
+            <motion.div
+              initial={animateConfig}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.1, delay: 2 * 0.2 }}
+              className="text-gray-700
+            
+            
+            input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            >
               {" "}
               {wordGrammarCorrect[2]}
-            </div>
-            <div className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center">
+            </motion.div>
+            <motion.div
+              initial={animateConfig}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.1, delay: 3 * 0.2 }}
+              className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            >
               {" "}
               {wordGrammarCorrect[3]}
-            </div>
-            <div className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center">
+            </motion.div>
+            <motion.div
+              initial={animateConfig}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.1, delay: 4 * 0.2 }}
+              className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-400 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            >
               {" "}
               {wordGrammarCorrect[4]}
-            </div>
+            </motion.div>
           </div>
         )}
       </section>

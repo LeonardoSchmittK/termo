@@ -21,14 +21,19 @@ function Input() {
   const setHasWon = useBearStore((state) => state.setHasWon);
   const rightWord = useBearStore((state) => state.word);
   const setLettersGone = useBearStore((state) => state.setLettersGone);
+  const setInputRefs = useBearStore((state) => state.setInputRefs);
+  const setWordInput = useBearStore((state) => state.setWordInput);
+  const wordInput = useBearStore((state) => state.wordInput);
+  const [isWiggle, setIsWiggle] = useState(false);
 
   function handleChangeInput(index) {
-    setCounter(counter + 1);
-    const preWord = [...word];
+    const preWord = [...wordInput];
 
     preWord[index] = inputRefs[index].current.value.toLowerCase();
 
-    setWord(preWord);
+    setWordInput(preWord);
+
+    console.log(preWord + " TROCAAAAAAAAAA");
 
     if (index != 4) {
       inputRefs[(index + 1) % 5].current.focus();
@@ -40,32 +45,37 @@ function Input() {
   }
 
   function checkEnterKey(event) {
-    if (event.key == "Enter") {
-      incrementWord();
-      const incorrectWord = word
-        .join("")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[~^`]+/g, "")
-        .trim();
+    if ([...wordInput].join("").trim().length === 5) {
+      if (event.key == "Enter") {
+        incrementWord();
+        const incorrectWord = wordInput
+          .join("")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[~^`]+/g, "")
+          .trim();
 
-      transformWordPut(incorrectWord);
-      inputRefs.forEach((item) => (item.current.value = ""));
-      inputRefs[0].current.focus();
-      setWordsHistoric(incorrectWord);
+        transformWordPut(incorrectWord);
+        inputRefs.forEach((item) => (item.current.value = ""));
+        inputRefs[0].current.focus();
+        setWordsHistoric(incorrectWord);
 
-      setLettersGone(incorrectWord);
+        setLettersGone(incorrectWord);
 
-      if (rightWord == incorrectWord) {
-        setHasWon(true);
-        if (typeof window !== undefined) {
-          if (localStorage.getItem("timesWon")) {
-            localStorage.setItem(
-              "timesWon",
-              localStorage.getItem("timesWon") + "1"
-            );
-          } else {
-            localStorage.setItem("timesWon", "1");
+        console.log(incorrectWord + "<<<<<<<<<<<<<<<<<<<<<<");
+        setWordInput("");
+
+        if (rightWord == incorrectWord) {
+          setHasWon(true);
+          if (typeof window !== undefined) {
+            if (localStorage.getItem("timesWon")) {
+              localStorage.setItem(
+                "timesWon",
+                localStorage.getItem("timesWon") + "1"
+              );
+            } else {
+              localStorage.setItem("timesWon", "1");
+            }
           }
         }
       }
@@ -74,7 +84,14 @@ function Input() {
 
   useEffect(() => {
     console.log(word);
+    setInputRefs(inputRefs[0]);
+    setInputRefs(inputRefs[1]);
+    setInputRefs(inputRefs[2]);
+    setInputRefs(inputRefs[3]);
+    setInputRefs(inputRefs[4]);
   }, word);
+
+  const animateConfig = { opacity: 0, x: -20 };
 
   return (
     <AnimatePresence>
@@ -86,7 +103,7 @@ function Input() {
             placeholder="T"
             maxLength={1}
             minLength={1}
-            initial={{ opacity: 0, x: -50 }}
+            initial={animateConfig}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.1, delay: 0 * 0.2 }}
@@ -94,7 +111,11 @@ function Input() {
             onKeyDown={handleKeyDown.bind(null, 0)}
             ref={inputRefs[0]}
             onChange={handleChangeInput.bind(null, 0)}
-            className="text-gray-700  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            className={`text-gray-700 ${
+              isWiggle ? "bg-red-500" : ""
+            }  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center 
+            font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 
+            flex justify-center align-middle items-center"`}
           />
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}

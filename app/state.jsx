@@ -8,10 +8,17 @@ const initialState = {
   wordPut: "",
   wordsHistoric: [],
   wordGrammarCorrect: "fúria",
+  preword: "",
+  wordInput: "",
+  inputRefs: [],
 };
 
 const useBearStore = create((set) => ({
   ...initialState,
+  setPreword: (txt) => set((state) => ({ preword: txt })),
+  setWordInput: (txt) => set((state) => ({ wordInput: txt })),
+  setInputRefs: (ref) =>
+    set((state) => ({ inputRefs: [...state.inputRefs, ref] })),
   setWord: (txt) => set((state) => ({ word: txt })),
   setWordGrammarCorrect: (txt) => set((state) => ({ wordGrammarCorrect: txt })),
   setHasWon: (bool) => set((state) => ({ hasWon: bool })),
@@ -35,6 +42,7 @@ const useBearStore = create((set) => ({
   transformWordPut: (txt) => set((state) => ({ wordPut: txt })),
   setWordsHistoric: (word) =>
     set((state) => ({ wordsHistoric: [...state.wordsHistoric, word] })),
+
   reset: () => set(initialState),
 }));
 
