@@ -18,15 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <Script
-          src="https://tools.luckyorange.com/core/lo.js?site-id=cdd7c3a6"
-          strategy="afterInteractive"
-          async
-          defer
-        />
-      </Head>
       <body className={inter.className}>{children}</body>
+      <Script
+        src="https://tools.luckyorange.com/core/lo.js?site-id=cdd7c3a6"
+        strategy="afterInteractive"
+        async
+        defer
+      />
     </html>
   );
 }
