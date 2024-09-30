@@ -26,16 +26,7 @@ export default function RootLayout({
           defer
         />
       </Head>
-      <body className={inter.className}>
-        {children}
-
-        <Script
-          src="https://tools.luckyorange.com/core/lo.js?site-id=cdd7c3a6"
-          strategy="lazyOnload"
-          async
-          defer
-        />
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
