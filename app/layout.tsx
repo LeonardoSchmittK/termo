@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
@@ -17,7 +18,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <Head>
+        <Script
+          src="https://tools.luckyorange.com/core/lo.js?site-id=cdd7c3a6"
+          strategy="afterInteractive"
+          async
+          defer
+        />
+      </Head>
+      <body className={inter.className}>
+        {children}
+
+        <Script
+          src="https://tools.luckyorange.com/core/lo.js?site-id=cdd7c3a6"
+          strategy="lazyOnload"
+          async
+          defer
+        />
+      </body>
     </html>
   );
 }
