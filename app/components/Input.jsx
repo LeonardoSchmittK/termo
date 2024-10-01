@@ -26,6 +26,11 @@ function Input() {
   const wordInput = useBearStore((state) => state.wordInput);
   const [isWiggle, setIsWiggle] = useState(false);
 
+  function setCaretPosition(inputElement, position) {
+    console.log(position);
+    inputElement.setSelectionRange(position, position);
+  }
+
   function handleChangeInput(index) {
     const preWord = [...wordInput];
 
@@ -33,57 +38,100 @@ function Input() {
 
     setWordInput(preWord);
 
-    console.log(preWord + " TROCAAAAAAAAAA");
-
     if (index != 4) {
       inputRefs[(index + 1) % 5].current.focus();
     }
+
+    inputRefs.map((ref) => {
+      ref.current.placeholder = "";
+    });
   }
 
   function handleKeyDown(index) {
     inputRefs[index].current.value = "";
+
+    inputRefs.map((ref) => {
+      ref.current.placeholder = "";
+    });
+  }
+
+  function checkArrowKey(event, idInput) {
+    if (event.key == "ArrowLeft") {
+      try {
+        inputRefs[idInput - 1].current.focus();
+      } catch (e) {}
+      return;
+    }
+    if (event.key == "ArrowRight") {
+      try {
+        inputRefs[idInput + 1].current.focus();
+      } catch (e) {}
+
+      return;
+    }
   }
 
   function checkEnterKey(event) {
     if ([...wordInput].join("").trim().length === 5) {
       if (event.key == "Enter") {
-        incrementWord();
-        const incorrectWord = wordInput
-          .join("")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[~^`]+/g, "")
-          .trim();
+        const checkWordExistence = async () => {
+          try {
+            const response = await fetch("/api/checkWordExistence", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ checkingWord: wordInput.join("") }),
+            });
 
-        transformWordPut(incorrectWord);
-        inputRefs.forEach((item) => (item.current.value = ""));
-        inputRefs[0].current.focus();
-        setWordsHistoric(incorrectWord);
+            const data = await response.json();
+            if (data.doesExist) {
+              checkIfWordIsRight();
+            }
+          } catch (error) {
+            console.error("Error checking word:", error);
+          }
+        };
 
-        setLettersGone(incorrectWord);
+        checkWordExistence();
 
-        console.log(incorrectWord + "<<<<<<<<<<<<<<<<<<<<<<");
-        setWordInput("");
+        const checkIfWordIsRight = () => {
+          incrementWord();
+          const incorrectWord = wordInput
+            .join("")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[~^`]+/g, "")
+            .trim();
 
-        if (rightWord == incorrectWord) {
-          setHasWon(true);
-          if (typeof window !== undefined) {
-            if (localStorage.getItem("timesWon")) {
-              localStorage.setItem(
-                "timesWon",
-                localStorage.getItem("timesWon") + "1"
-              );
-            } else {
-              localStorage.setItem("timesWon", "1");
+          transformWordPut(incorrectWord);
+          inputRefs.forEach((item) => (item.current.value = ""));
+          inputRefs[0].current.focus();
+          setWordsHistoric(incorrectWord);
+
+          setLettersGone(incorrectWord);
+
+          setWordInput("");
+
+          if (rightWord == incorrectWord) {
+            setHasWon(true);
+            if (typeof window !== undefined) {
+              if (localStorage.getItem("timesWon")) {
+                localStorage.setItem(
+                  "timesWon",
+                  localStorage.getItem("timesWon") + "1"
+                );
+              } else {
+                localStorage.setItem("timesWon", "1");
+              }
             }
           }
-        }
+        };
       }
     }
   }
 
   useEffect(() => {
-    console.log(word);
     setInputRefs(inputRefs[0]);
     setInputRefs(inputRefs[1]);
     setInputRefs(inputRefs[2]);
@@ -108,7 +156,10 @@ function Input() {
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.1, delay: 0 * 0.2 }}
             type="text"
-            onKeyDown={handleKeyDown.bind(null, 0)}
+            onKeyDown={(event) => {
+              handleKeyDown.bind(null, 0);
+              checkArrowKey(event, 0);
+            }}
             ref={inputRefs[0]}
             onChange={handleChangeInput.bind(null, 0)}
             className={`text-gray-700 ${
@@ -129,7 +180,10 @@ function Input() {
             transition={{ duration: 0.1, delay: 1 * 0.2 }}
             type="text"
             //   onKeyDown={handleKeyDownInput2}
-            onKeyDown={handleKeyDown.bind(null, 1)}
+            onKeyDown={(event) => {
+              handleKeyDown.bind(null, 1);
+              checkArrowKey(event, 1);
+            }}
             ref={inputRefs[1]}
             onChange={handleChangeInput.bind(null, 1)}
             className="text-gray-700 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
@@ -147,7 +201,10 @@ function Input() {
             type="text"
             //   onKeyDown={handleKeyDownInput3}
             ref={inputRefs[2]}
-            onKeyDown={handleKeyDown.bind(null, 2)}
+            onKeyDown={(event) => {
+              handleKeyDown.bind(null, 2);
+              checkArrowKey(event, 2);
+            }}
             onChange={handleChangeInput.bind(null, 2)}
             className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
           />
@@ -164,7 +221,10 @@ function Input() {
             type="text"
             // onKeyDown={handleKeyDownInput4}
             ref={inputRefs[3]}
-            onKeyDown={handleKeyDown.bind(null, 3)}
+            onKeyDown={(event) => {
+              handleKeyDown.bind(null, 3);
+              checkArrowKey(event, 3);
+            }}
             onChange={handleChangeInput.bind(null, 3)}
             className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
           />
@@ -184,8 +244,8 @@ function Input() {
             onChange={handleChangeInput.bind(null, 4)}
             onKeyDown={(event) => {
               handleKeyDown.bind(null, 4);
-
-              checkEnterKey(event);
+              checkArrowKey(event, 4);
+              checkEnterKey(event, 4);
             }}
             className="text-gray-700 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
           />

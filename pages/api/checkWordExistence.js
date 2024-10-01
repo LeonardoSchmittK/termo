@@ -934,14 +934,6 @@ const words = [
   "oásis",
 ];
 
-const wordsTest = ["anciã", "útero"];
-
-function getData(req, res) {
-  res
-    .status(200)
-    .json({ word: words[Math.floor(Math.random() * words.length)] });
-}
-
 function checkWordExists(req, res) {
   const checkingWord = req.body.checkingWord;
 
@@ -952,4 +944,4 @@ function checkWordExists(req, res) {
   }
 }
 
-export default getData;
+export default checkWordExists;
