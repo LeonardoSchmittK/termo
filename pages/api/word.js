@@ -1,3 +1,5 @@
+import Typo from "typo-js";
+
 const words = [
   "sagaz",
 
@@ -125,13 +127,9 @@ const words = [
 
   "causa",
 
-  "óbice",
-
   "genro",
 
   "dever",
-
-  "coser",
 
   "pária",
 
@@ -152,8 +150,6 @@ const words = [
   "temor",
 
   "ainda",
-
-  "xibiu",
 
   "estar",
 
@@ -227,8 +223,6 @@ const words = [
 
   "mercê",
 
-  "round",
-
   "impor",
 
   "banal",
@@ -246,8 +240,6 @@ const words = [
   "coisa",
 
   "usura",
-
-  "apraz",
 
   "juízo",
 
@@ -284,8 +276,6 @@ const words = [
   "vendo",
 
   "manso",
-
-  "reaça",
 
   "herói",
 
@@ -333,8 +323,6 @@ const words = [
 
   "linda",
 
-  "afins",
-
   "cisma",
 
   "obter",
@@ -373,8 +361,6 @@ const words = [
 
   "enfim",
 
-  "tomar",
-
   "morte",
 
   "visão",
@@ -400,10 +386,6 @@ const words = [
   "bravo",
 
   "vital",
-
-  "pulha",
-
-  "reles",
 
   "reter",
 
@@ -601,8 +583,6 @@ const words = [
 
   "apoio",
 
-  "coçar",
-
   "velar",
 
   "relva",
@@ -650,10 +630,6 @@ const words = [
   "minha",
 
   "frase",
-
-  "torço",
-
-  "anuir",
 
   "verso",
 
@@ -781,8 +757,6 @@ const words = [
 
   "rezar",
 
-  "pajem",
-
   "banzo",
 
   "morro",
@@ -818,8 +792,6 @@ const words = [
   "grupo",
 
   "motim",
-
-  "anais",
 
   "serão",
 
@@ -909,8 +881,6 @@ const words = [
 
   "prova",
 
-  "psico",
-
   "filho",
 
   "corpo",
@@ -964,6 +934,8 @@ const words = [
   "fixar",
 
   "oásis",
+
+  "faria",
 ];
 
 const wordsTest = ["anciã", "útero"];

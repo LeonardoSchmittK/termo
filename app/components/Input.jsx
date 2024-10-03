@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import useBearStore from "../state";
+import validator from "validator";
 import { AnimatePresence, motion } from "framer-motion";
 
 function Input() {
@@ -33,57 +34,120 @@ function Input() {
 
     setWordInput(preWord);
 
-    console.log(preWord + " TROCAAAAAAAAAA");
-
     if (index != 4) {
       inputRefs[(index + 1) % 5].current.focus();
     }
+
+    inputRefs.map((ref) => {
+      ref.current.placeholder = "";
+    });
   }
 
   function handleKeyDown(index) {
     inputRefs[index].current.value = "";
+
+    inputRefs.map((ref) => {
+      ref.current.placeholder = "";
+    });
+  }
+
+  function checkArrowKey(event, idInput) {
+    if (event.key == "ArrowLeft") {
+      try {
+        inputRefs[idInput - 1].current.focus();
+      } catch (e) {}
+      return;
+    }
+    if (event.key == "ArrowRight") {
+      try {
+        inputRefs[idInput + 1].current.focus();
+      } catch (e) {}
+
+      return;
+    }
+  }
+
+  function checkBackspaceKey(event, id) {
+    event.preventDefault();
+    if (event.keyCode == 8) {
+      // backspace (del) key
+      if (inputRefs[id].current.value != "") {
+        inputRefs[id].current.value = "";
+        handleChangeInput(id);
+        handleKeyDown(id);
+        try {
+          inputRefs[id].current.focus();
+        } catch (e) {}
+      } else {
+        try {
+          inputRefs[id - 1].current.focus();
+        } catch (e) {}
+      }
+    }
   }
 
   function checkEnterKey(event) {
     if ([...wordInput].join("").trim().length === 5) {
-      if (event.key == "Enter") {
-        incrementWord();
-        const incorrectWord = wordInput
-          .join("")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[~^`]+/g, "")
-          .trim();
+      if (event.keyCode == 13) {
+        // enter key
+        const checkWordExistence = async () => {
+          try {
+            const response = await fetch("/api/checkWordExistence", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ checkingWord: wordInput.join("") }),
+            });
 
-        transformWordPut(incorrectWord);
-        inputRefs.forEach((item) => (item.current.value = ""));
-        inputRefs[0].current.focus();
-        setWordsHistoric(incorrectWord);
+            const data = await response.json();
+            if (data.doesExist) {
+              checkIfWordIsRight();
+            }
+          } catch (error) {
+            console.error("Error checking word:", error);
+          }
+        };
 
-        setLettersGone(incorrectWord);
+        checkWordExistence();
 
-        console.log(incorrectWord + "<<<<<<<<<<<<<<<<<<<<<<");
-        setWordInput("");
+        const checkIfWordIsRight = () => {
+          incrementWord();
+          const incorrectWord = wordInput
+            .join("")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[~^`]+/g, "")
+            .trim();
 
-        if (rightWord == incorrectWord) {
-          setHasWon(true);
-          if (typeof window !== undefined) {
-            if (localStorage.getItem("timesWon")) {
-              localStorage.setItem(
-                "timesWon",
-                localStorage.getItem("timesWon") + "1"
-              );
-            } else {
-              localStorage.setItem("timesWon", "1");
+          transformWordPut(incorrectWord);
+          inputRefs.forEach((item) => (item.current.value = ""));
+          inputRefs[0].current.focus();
+          setWordsHistoric(incorrectWord);
+
+          setLettersGone(incorrectWord);
+
+          setWordInput("");
+
+          if (rightWord == incorrectWord) {
+            setHasWon(true);
+            if (typeof window !== undefined) {
+              if (localStorage.getItem("timesWon")) {
+                localStorage.setItem(
+                  "timesWon",
+                  localStorage.getItem("timesWon") + "1"
+                );
+              } else {
+                localStorage.setItem("timesWon", "1");
+              }
             }
           }
-        }
+        };
       }
     }
   }
 
   useEffect(() => {
-    console.log(word);
     setInputRefs(inputRefs[0]);
     setInputRefs(inputRefs[1]);
     setInputRefs(inputRefs[2]);
@@ -108,14 +172,25 @@ function Input() {
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.1, delay: 0 * 0.2 }}
             type="text"
-            onKeyDown={handleKeyDown.bind(null, 0)}
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              if (validator.isAlpha(event.key) && event.key.length === 1) {
+                inputRefs[0].current.value = event.key.toLocaleUpperCase();
+                handleChangeInput.bind(null, 0);
+                handleKeyDown.bind(null, 0);
+              } else {
+                checkArrowKey(event, 0);
+                checkEnterKey(event, 0);
+                checkBackspaceKey(event, 0);
+              }
+            }}
             ref={inputRefs[0]}
-            onChange={handleChangeInput.bind(null, 0)}
-            className={`text-gray-700 ${
+            onKeyPress={handleChangeInput.bind(null, 0)}
+            className={`text-gray-700 caret-transparent ${
               isWiggle ? "bg-red-500" : ""
             }  input-1 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center 
             font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 
-            flex justify-center align-middle items-center"`}
+            flex justify-center align-middle items-center focus:outline-none focus:ring focus:border-gray-500 caret-transparent"`}
           />
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}
@@ -123,16 +198,27 @@ function Input() {
             placeholder="E"
             maxLength={1}
             minLength={1}
+            tabIndex={-1}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.1, delay: 1 * 0.2 }}
             type="text"
             //   onKeyDown={handleKeyDownInput2}
-            onKeyDown={handleKeyDown.bind(null, 1)}
+            onKeyDown={(event) => {
+              if (validator.isAlpha(event.key) && event.key.length === 1) {
+                inputRefs[1].current.value = event.key.toLocaleUpperCase();
+                handleChangeInput.bind(null, 1);
+                handleKeyDown.bind(null, 1);
+              } else {
+                checkArrowKey(event, 1);
+                checkEnterKey(event, 1);
+                checkBackspaceKey(event, 1);
+              }
+            }}
             ref={inputRefs[1]}
-            onChange={handleChangeInput.bind(null, 1)}
-            className="text-gray-700 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            onKeyPress={handleChangeInput.bind(null, 1)}
+            className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center focus:outline-none focus:ring focus:border-gray-500 caret-transparent"
           />
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}
@@ -140,6 +226,7 @@ function Input() {
             placeholder="R"
             maxLength={1}
             minLength={1}
+            tabIndex={-1}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
@@ -147,9 +234,19 @@ function Input() {
             type="text"
             //   onKeyDown={handleKeyDownInput3}
             ref={inputRefs[2]}
-            onKeyDown={handleKeyDown.bind(null, 2)}
-            onChange={handleChangeInput.bind(null, 2)}
-            className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            onKeyDown={(event) => {
+              if (validator.isAlpha(event.key) && event.key.length === 1) {
+                inputRefs[2].current.value = event.key.toLocaleUpperCase();
+                handleChangeInput.bind(null, 2);
+                handleKeyDown.bind(null, 2);
+              } else {
+                checkArrowKey(event, 2);
+                checkEnterKey(event, 2);
+                checkBackspaceKey(event, 2);
+              }
+            }}
+            onKeyPress={handleChangeInput.bind(null, 2)}
+            className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center focus:outline-none focus:ring focus:border-gray-500 caret-transparent"
           />
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}
@@ -157,6 +254,7 @@ function Input() {
             placeholder="M"
             maxLength={1}
             minLength={1}
+            tabIndex={-1}
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
@@ -164,9 +262,19 @@ function Input() {
             type="text"
             // onKeyDown={handleKeyDownInput4}
             ref={inputRefs[3]}
-            onKeyDown={handleKeyDown.bind(null, 3)}
-            onChange={handleChangeInput.bind(null, 3)}
-            className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            onKeyDown={(event) => {
+              if (validator.isAlpha(event.key) && event.key.length === 1) {
+                inputRefs[3].current.value = event.key.toLocaleUpperCase();
+                handleChangeInput.bind(null, 3);
+                handleKeyDown.bind(null, 3);
+              } else {
+                checkArrowKey(event, 3);
+                checkEnterKey(event, 3);
+                checkBackspaceKey(event, 3);
+              }
+            }}
+            onKeyPress={handleChangeInput.bind(null, 3)}
+            className="text-gray-700  w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center focus:outline-none focus:ring focus:border-gray-500 caret-transparent"
           />
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}
@@ -174,6 +282,7 @@ function Input() {
             placeholder="O"
             maxLength={1}
             minLength={1}
+            tabIndex={-1}
             type="text"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -181,13 +290,19 @@ function Input() {
             transition={{ duration: 0.1, delay: 4 * 0.2 }}
             //    onKeyDown={handleKeyDownInput5}
             ref={inputRefs[4]}
-            onChange={handleChangeInput.bind(null, 4)}
+            onKeyPress={handleChangeInput.bind(null, 4)}
             onKeyDown={(event) => {
-              handleKeyDown.bind(null, 4);
-
-              checkEnterKey(event);
+              if (validator.isAlpha(event.key) && event.key.length === 1) {
+                inputRefs[4].current.value = event.key.toLocaleUpperCase();
+                handleChangeInput.bind(null, 4);
+                handleKeyDown.bind(null, 4);
+              } else {
+                checkArrowKey(event, 4);
+                checkEnterKey(event, 4);
+                checkBackspaceKey(event, 4);
+              }
             }}
-            className="text-gray-700 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center"
+            className="text-gray-700 w-14 h-16 md:w-32 md:h-24 bg-gray-300 rounded-xl text-center font-extrabold text-2xl md:text-4xl text-black-300 uppercase color-grey-400 p-3 flex justify-center align-middle items-center focus:outline-none focus:ring focus:border-gray-500 caret-transparent"
           />
         </div>
       </div>
