@@ -1,29 +1,28 @@
-import Typo from "typo-js";
+import fs from "fs/promises";
 
-const dictionary = new Typo("pt_BR", {
-  dictionaryPath: "./", // specify the path to the .aff and .dic files
-  data: {
-    aff: "pt_BR.aff", // name of the aff file
-    dic: "pt_BR.dic", // name of the dic file
-  },
-});
+async function isWordInFile(word, filePath) {
+  try {
+    const data = await fs.readFile(filePath, "utf8");
 
-function checkWordExists(req, res) {
-  const checkingWord = req.body.checkingWord;
-  console.log(dictionary);
-  console.log(checkingWord + ")))))0");
-  console.log(dictionary.check(checkingWord) + ")))))0");
-  if (dictionary.check(checkingWord)) {
-    console.log(checkWordExists + "existe");
-    res.status(200).json({ word: checkingWord, doesExist: true });
-  } else {
-    console.log(checkWordExists + "naaaao existe");
+    const words = data.split("\n");
 
-    res.status(404).json({ word: checkingWord, doesExist: false });
+    return words.includes(word);
+  } catch (err) {
+    console.error(`Error reading file: ${err}`);
+    return false;
   }
 }
 
-const cachorro = "cachorro";
-console.log(dictionary.check(cachorro));
+async function checkWordExists(req, res) {
+  const checkingWord = req.body.checkingWord;
+
+  const ress = await isWordInFile(checkingWord, "words.txt");
+
+  if (ress) {
+    res.status(200).json({ word: checkingWord, doesExist: true });
+  } else {
+    res.status(404).json({ word: checkingWord, doesExist: false });
+  }
+}
 
 export default checkWordExists;

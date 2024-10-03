@@ -12,20 +12,16 @@ function Footer() {
   const hasWon = useBearStore((state) => state.hasWon);
 
   async function getData() {
-    const data = await fetch("https://termo-back.vercel.app/words/random").then(
-      (d) => {
-        d.json().then(({ word }) => {
-          const wordNotGramaticallyCorrect = word
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/[~^`]+/g, "")
-            .trim();
-          setWord(wordNotGramaticallyCorrect);
-          setWordGrammarCorrect(word);
-          console.log(word);
-        });
-      }
-    );
+    const response = await fetch("https://termo-back.vercel.app/words/random");
+    const { word } = await response.json();
+    const wordNotGramaticallyCorrect = word
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[~^`]+/g, "")
+      .trim();
+    setWord(wordNotGramaticallyCorrect);
+    setWordGrammarCorrect(word);
+    console.log(word);
   }
 
   function handleClick() {
@@ -34,20 +30,27 @@ function Footer() {
   }
 
   useEffect(() => {
-    if (typeof window !== undefined && localStorage.getItem("timesWon")) {
-      setTimesWon(localStorage.getItem("timesWon"));
+    if (typeof window !== "undefined") {
+      const localStorageTimesWon = localStorage.getItem("timesWon");
+      if (localStorageTimesWon) {
+        setTimesWon(localStorageTimesWon);
+      }
     }
   }, [hasWon]);
 
   return (
     <footer className="md:p-10 mt-4 w-full">
       <h4 className="text-gray-400">
-        <a href="https://github.com/LeonardoSchmittK" target="_blank">
+        <a
+          href="https://github.com/LeonardoSchmittK"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           &lt;/&gt; Leonardo Schmitt
         </a>
       </h4>
       <button
-        className="flex gap-1 md:gap-3 flex-row justify-between  p-2 my-2 md:p-3 md:my-3 bg-gray-400 rounded-md shadow-md uppercase font-bold text-gray-800 hover:bg-gray-300 transition-all"
+        className="flex gap-1 md:gap-3 flex-row justify-between p-2 my-2 md:p-3 md:my-3 bg-gray-400 rounded-md shadow-md uppercase font-bold text-gray-800 hover:bg-gray-300 transition-all"
         onClick={handleClick}
       >
         <svg
@@ -69,11 +72,11 @@ function Footer() {
       <h4 className="text-gray-400">
         {timesWon?.length} Acertos |
         {timesWon?.length > 0 && timesWon?.length < 5 && " Level 1 | Aprendiz"}
-        {timesWon?.length > 5 && timesWon?.length < 15 && " Level 2 | Mago"}
-        {timesWon?.length > 15 && timesWon?.length < 30 && " Level 3 | O Cara"}
-        {timesWon?.length > 30 && timesWon?.length < 40 && " Level 4 | O Rei"}
-        {timesWon?.length > 40 && timesWon?.length < 50 && " Level 5 | Expert"}
-        {timesWon?.length > 50 && " Level 6 | Campeão"}
+        {timesWon?.length >= 5 && timesWon?.length < 15 && " Level 2 | Mago"}
+        {timesWon?.length >= 15 && timesWon?.length < 30 && " Level 3 | O Cara"}
+        {timesWon?.length >= 30 && timesWon?.length < 40 && " Level 4 | O Rei"}
+        {timesWon?.length >= 40 && timesWon?.length < 50 && " Level 5 | Expert"}
+        {timesWon?.length >= 50 && " Level 6 | Campeão"}
       </h4>
     </footer>
   );

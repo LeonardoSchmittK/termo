@@ -33,7 +33,6 @@ function Input() {
     preWord[index] = inputRefs[index].current.value.toLowerCase();
 
     setWordInput(preWord);
-    console.log(preWord + " < <PREWORD");
 
     if (index != 4) {
       inputRefs[(index + 1) % 5].current.focus();
@@ -70,8 +69,6 @@ function Input() {
 
   function checkBackspaceKey(event, id) {
     event.preventDefault();
-    console.log(id);
-    console.log(id);
     if (event.keyCode == 8) {
       // backspace (del) key
       if (inputRefs[id].current.value != "") {
@@ -90,22 +87,21 @@ function Input() {
   }
 
   function checkEnterKey(event) {
-    console.log([...wordInput].join("").trim());
     if ([...wordInput].join("").trim().length === 5) {
       if (event.keyCode == 13) {
         // enter key
         const checkWordExistence = async () => {
           try {
-            const response = await fetch(
-              "https://api.contexto.me/machado/pt-br/game/10/" +
-                wordInput.join(""),
-              {
-                method: "GET",
-              }
-            );
+            const response = await fetch("/api/checkWordExistence", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ checkingWord: wordInput.join("") }),
+            });
 
             const data = await response.json();
-            if (data.word) {
+            if (data.doesExist) {
               checkIfWordIsRight();
             }
           } catch (error) {
