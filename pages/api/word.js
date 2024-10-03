@@ -1,3 +1,5 @@
+import Typo from "typo-js";
+
 const words = [
   "sagaz",
 
@@ -932,6 +934,8 @@ const words = [
   "fixar",
 
   "oásis",
+
+  "faria",
 ];
 
 const wordsTest = ["anciã", "útero"];
@@ -940,16 +944,6 @@ function getData(req, res) {
   res
     .status(200)
     .json({ word: words[Math.floor(Math.random() * words.length)] });
-}
-
-function checkWordExists(req, res) {
-  const checkingWord = req.body.checkingWord;
-
-  if (words.includes(checkingWord)) {
-    res.status(200).json({ word: checkingWord, doesExist: true });
-  } else {
-    res.status(404).json({ word: checkingWord, doesExist: false });
-  }
 }
 
 export default getData;
