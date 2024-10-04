@@ -159,7 +159,7 @@ function Input() {
     setInputRefs(inputRefs[4]);
 
     const handleResize = () => {
-      if (window.innerWidth <= 650) {
+      if (window.innerWidth <= 768) {
         setIsMobile(true);
       } else {
         setIsMobile(false);
@@ -173,30 +173,25 @@ function Input() {
 
   return (
     <AnimatePresence>
-      {isMobile && (
-        <button
-          className="fixed bottom-5 right-5 bg-slate-600 text-white py-2 px-4 rounded-md shadow-lg"
-          onClick={() => checkEnterKey({ key: "Enter" })}
-          onTouchStart={() => checkEnterKey({ key: "Enter" })}
-          onTouchEnd={() => checkEnterKey({ key: "Enter" })}
+      <button
+        className="fixed top-5 right-5 bg-slate-600 text-white py-2 px-4 rounded-md shadow-lg"
+        onClick={() => checkEnterKey({ key: "Enter" })}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="4"
+          stroke="currentColor"
+          class="size-6"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="4"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m8.25 4.5 7.5 7.5-7.5 7.5"
-            />
-          </svg>
-        </button>
-      )}
-
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m8.25 4.5 7.5 7.5-7.5 7.5"
+          />
+        </svg>
+      </button>
       <div className="rounded-xl">
         <div className="grid grid-cols-5 md:gap-3 px-3 py-3 rounded-xl ">
           <motion.input
@@ -213,10 +208,6 @@ function Input() {
             tabIndex={-1}
             onKeyDown={(event) => {
               if (validator.isAlpha(event.key) && event.key.length === 1) {
-                if (isMobile) {
-                  console.log("opaa");
-                  checkEnterKey({ key: "Enter" });
-                }
                 inputRefs[0].current.value = event.key.toLocaleUpperCase();
                 handleChangeInput.bind(null, 0);
                 handleKeyDown.bind(null, 0);
@@ -249,10 +240,6 @@ function Input() {
             //   onKeyDown={handleKeyDownInput2}
             onKeyDown={(event) => {
               if (validator.isAlpha(event.key) && event.key.length === 1) {
-                if (isMobile) {
-                  console.log("opaa");
-                  checkEnterKey({ key: "Enter" });
-                }
                 inputRefs[1].current.value = event.key.toLocaleUpperCase();
                 handleChangeInput.bind(null, 1);
                 handleKeyDown.bind(null, 1);
@@ -282,10 +269,6 @@ function Input() {
             ref={inputRefs[2]}
             onKeyDown={(event) => {
               if (validator.isAlpha(event.key) && event.key.length === 1) {
-                if (isMobile) {
-                  console.log("opaa");
-                  checkEnterKey({ key: "Enter" });
-                }
                 inputRefs[2].current.value = event.key.toLocaleUpperCase();
                 handleChangeInput.bind(null, 2);
                 handleKeyDown.bind(null, 2);
@@ -314,10 +297,6 @@ function Input() {
             ref={inputRefs[3]}
             onKeyDown={(event) => {
               if (validator.isAlpha(event.key) && event.key.length === 1) {
-                if (isMobile) {
-                  console.log("opaa");
-                  checkEnterKey({ key: "Enter" });
-                }
                 inputRefs[3].current.value = event.key.toLocaleUpperCase();
                 handleChangeInput.bind(null, 3);
                 handleKeyDown.bind(null, 3);
@@ -347,10 +326,6 @@ function Input() {
             onKeyPress={handleChangeInput.bind(null, 4)}
             onKeyDown={(event) => {
               if (validator.isAlpha(event.key) && event.key.length === 1) {
-                if (isMobile) {
-                  console.log("opaa");
-                  checkEnterKey({ key: "Enter" });
-                }
                 inputRefs[4].current.value = event.key.toLocaleUpperCase();
                 handleChangeInput.bind(null, 4);
                 handleKeyDown.bind(null, 4);
