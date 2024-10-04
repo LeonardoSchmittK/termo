@@ -88,17 +88,20 @@ function Input() {
 
   function checkEnterKey(event) {
     if ([...wordInput].join("").trim().length === 5) {
-      if (event.keyCode == 13 || event.which == 13) {
+      if (event.keyCode == 13 || event.which == 13 || event.key == "Enter") {
         // enter key
         const checkWordExistence = async () => {
           try {
-            const response = await fetch("https://termo-back.vercel.app/words/doesExist", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ checkingWord: wordInput.join("") }),
-            });
+            const response = await fetch(
+              "https://termo-back.vercel.app/words/doesExist",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ checkingWord: wordInput.join("") }),
+              }
+            );
 
             const data = await response.json();
             if (data.doesExist) {
