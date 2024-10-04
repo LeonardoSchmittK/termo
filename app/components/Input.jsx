@@ -88,7 +88,7 @@ function Input() {
 
   function checkEnterKey(event) {
     if ([...wordInput].join("").trim().length === 5) {
-      if (event.keyCode == 13) {
+      if (event.keyCode == 13 || event.which == 13) {
         // enter key
         const checkWordExistence = async () => {
           try {
