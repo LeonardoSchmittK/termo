@@ -205,7 +205,7 @@ function Input() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 1.1, delay: 5 * 0.2 }}
-            className="absolute top-3 -right-8 bg-gray-300 text-gray-600  py-2 px-4 rounded-md shadow-lg"
+            className="absolute top-3 -right-3 bg-gray-300 text-gray-600  py-2 px-4 rounded-md shadow-lg sm:hidden"
             onClick={() => actuallyDo()}
           >
             <svg
@@ -214,7 +214,7 @@ function Input() {
               viewBox="0 0 24 24"
               strokeWidth="3.8"
               stroke="currentColor"
-              className="size-6"
+              className="size-4"
             >
               <path
                 strokeLinecap="round"
