@@ -211,6 +211,11 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
+"@types/ua-parser-js@^0.7.39":
+  version "0.7.39"
+  resolved "https://registry.npmjs.org/@types/ua-parser-js/-/ua-parser-js-0.7.39.tgz"
+  integrity sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==
+
 "@types/validator@^13.12.2":
   version "13.12.2"
   resolved "https://registry.npmjs.org/@types/validator/-/validator-13.12.2.tgz"
@@ -2693,6 +2698,11 @@ typo-js@^1.2.4:
   version "1.2.4"
   resolved "https://registry.npmjs.org/typo-js/-/typo-js-1.2.4.tgz"
   integrity sha512-Oy/k+tFle5NAA3J/yrrYGfvEnPVrDZ8s8/WCwjUE75k331QyKIsFss7byQ/PzBmXLY6h1moRnZbnaxWBe3I3CA==
+
+ua-parser-js@^1.0.39:
+  version "1.0.39"
+  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-1.0.39.tgz"
+  integrity sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

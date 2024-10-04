@@ -27,6 +27,65 @@ function Input() {
   const wordInput = useBearStore((state) => state.wordInput);
   const [isWiggle, setIsWiggle] = useState(false);
 
+  function actuallyDo() {
+    const checkWordExistence = async () => {
+      try {
+        const response = await fetch(
+          "https://termo-back.vercel.app/words/doesExist",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ checkingWord: wordInput.join("") }),
+          }
+        );
+
+        const data = await response.json();
+        if (data.doesExist) {
+          checkIfWordIsRight();
+        }
+      } catch (error) {
+        console.error("Error checking word:", error);
+      }
+    };
+
+    checkWordExistence();
+
+    const checkIfWordIsRight = () => {
+      incrementWord();
+      const incorrectWord = wordInput
+        .join("")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[~^`]+/g, "")
+        .trim();
+
+      transformWordPut(incorrectWord);
+      inputRefs.forEach((item) => (item.current.value = ""));
+      inputRefs[0].current.focus();
+      setWordsHistoric(incorrectWord);
+
+      setLettersGone(incorrectWord);
+
+      setWordInput("");
+
+      if (rightWord == incorrectWord) {
+        setHasWon(true);
+        if (typeof window !== undefined) {
+          if (localStorage.getItem("timesWon")) {
+            localStorage.setItem(
+              "timesWon",
+              localStorage.getItem("timesWon") + "1"
+            );
+          } else {
+            localStorage.setItem("timesWon", "1");
+          }
+        }
+      }
+    };
+  }
+
   function handleChangeInput(index) {
     const preWord = [...wordInput];
 
@@ -87,70 +146,14 @@ function Input() {
   }
 
   function checkEnterKey(event) {
-    alert(event.key + " " + event.keyCode);
     if ([...wordInput].join("").trim().length === 5) {
       if (event.keyCode == 13) {
         // enter key
-        const checkWordExistence = async () => {
-          try {
-            const response = await fetch(
-              "https://termo-back.vercel.app/words/doesExist",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ checkingWord: wordInput.join("") }),
-              }
-            );
-
-            const data = await response.json();
-            if (data.doesExist) {
-              checkIfWordIsRight();
-            }
-          } catch (error) {
-            console.error("Error checking word:", error);
-          }
-        };
-
-        checkWordExistence();
-
-        const checkIfWordIsRight = () => {
-          incrementWord();
-          const incorrectWord = wordInput
-            .join("")
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .replace(/[~^`]+/g, "")
-            .trim();
-
-          transformWordPut(incorrectWord);
-          inputRefs.forEach((item) => (item.current.value = ""));
-          inputRefs[0].current.focus();
-          setWordsHistoric(incorrectWord);
-
-          setLettersGone(incorrectWord);
-
-          setWordInput("");
-
-          if (rightWord == incorrectWord) {
-            setHasWon(true);
-            if (typeof window !== undefined) {
-              if (localStorage.getItem("timesWon")) {
-                localStorage.setItem(
-                  "timesWon",
-                  localStorage.getItem("timesWon") + "1"
-                );
-              } else {
-                localStorage.setItem("timesWon", "1");
-              }
-            }
-          }
-        };
+        actuallyDo();
       }
     }
   }
-
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     setInputRefs(inputRefs[0]);
     setInputRefs(inputRefs[1]);
@@ -164,7 +167,7 @@ function Input() {
   return (
     <AnimatePresence>
       <div className="rounded-xl">
-        <div className="grid grid-cols-5 md:gap-3 px-3 py-3 rounded-xl ">
+        <div className="relative grid grid-cols-5 md:gap-3 px-3 py-3 rounded-xl ">
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}
             contentEditable
@@ -176,6 +179,7 @@ function Input() {
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.1, delay: 0 * 0.2 }}
             type="text"
+            readOnly
             tabIndex={-1}
             onKeyDown={(event) => {
               if (validator.isAlpha(event.key) && event.key.length === 1) {
@@ -196,6 +200,29 @@ function Input() {
             font-extrabold text-2xl md:text-4xl  text-black-300 uppercase color-grey-400 p-3 
             flex justify-center align-middle items-center focus:outline-none focus:ring focus:border-gray-500 caret-transparent"`}
           />
+          <motion.button
+            initial={animateConfig}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{ duration: 1.1, delay: 5 * 0.2 }}
+            className="absolute top-3 -right-8 bg-gray-300 text-gray-600  py-2 px-4 rounded-md shadow-lg"
+            onClick={() => actuallyDo()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="3.8"
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </motion.button>
           <motion.input
             disabled={wordsHistoric.length >= 5 || hasWon}
             contentEditable
@@ -203,6 +230,7 @@ function Input() {
             maxLength={1}
             minLength={1}
             tabIndex={-1}
+            readOnly
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
@@ -231,6 +259,7 @@ function Input() {
             maxLength={1}
             minLength={1}
             tabIndex={-1}
+            readOnly
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
@@ -259,6 +288,7 @@ function Input() {
             maxLength={1}
             minLength={1}
             tabIndex={-1}
+            readOnly
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
@@ -287,6 +317,7 @@ function Input() {
             maxLength={1}
             minLength={1}
             tabIndex={-1}
+            readOnly
             type="text"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}

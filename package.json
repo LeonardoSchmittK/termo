@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/ua-parser-js": "^0.7.39",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "framer-motion": "^11.0.25",
@@ -18,6 +19,7 @@
     "react-canvas-confetti": "^2.0.7",
     "react-dom": "^18",
     "typo-js": "^1.2.4",
+    "ua-parser-js": "^1.0.39",
     "validator": "^13.12.0",
     "zustand": "^4.5.2"
   },
