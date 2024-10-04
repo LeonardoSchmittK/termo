@@ -92,7 +92,7 @@ function Input() {
         // enter key
         const checkWordExistence = async () => {
           try {
-            const response = await fetch("/api/checkWordExistence", {
+            const response = await fetch("https://termo-back.vercel.app/words/doesExist", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
