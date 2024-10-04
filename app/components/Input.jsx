@@ -175,7 +175,7 @@ function Input() {
     <AnimatePresence>
       <button
         className="fixed top-5 right-5 bg-slate-600 text-white py-2 px-4 rounded-md shadow-lg"
-        onTouchStart={() => alert("Touch event detected!")}
+        onTouchStart={() => checkEnterKey({ key: "Enter" })}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
