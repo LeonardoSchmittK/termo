@@ -26,7 +26,6 @@ function Input() {
   const setWordInput = useBearStore((state) => state.setWordInput);
   const wordInput = useBearStore((state) => state.wordInput);
   const [isWiggle, setIsWiggle] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   function handleChangeInput(index) {
     const preWord = [...wordInput];
@@ -88,9 +87,9 @@ function Input() {
   }
 
   function checkEnterKey(event) {
-    alert([...wordInput].join("").trim().length);
+    alert(event.key + " " + event.keyCode);
     if ([...wordInput].join("").trim().length === 5) {
-      if (event.keyCode == 13 || event.which == 13 || event.key == "Enter") {
+      if (event.keyCode == 13) {
         // enter key
         const checkWordExistence = async () => {
           try {
@@ -158,41 +157,12 @@ function Input() {
     setInputRefs(inputRefs[2]);
     setInputRefs(inputRefs[3]);
     setInputRefs(inputRefs[4]);
-
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
-    };
-
-    handleResize();
   }, word);
 
   const animateConfig = { opacity: 0, x: -20 };
 
   return (
     <AnimatePresence>
-      <button
-        className="fixed top-5 right-5 bg-slate-600 text-white py-2 px-4 rounded-md shadow-lg"
-        onClick={() => checkEnterKey({ key: "Enter" })}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="4"
-          stroke="currentColor"
-          class="size-6"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m8.25 4.5 7.5 7.5-7.5 7.5"
-          />
-        </svg>
-      </button>
       <div className="rounded-xl">
         <div className="grid grid-cols-5 md:gap-3 px-3 py-3 rounded-xl ">
           <motion.input
