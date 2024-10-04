@@ -88,6 +88,7 @@ function Input() {
   }
 
   function checkEnterKey(event) {
+    alert([...wordInput].join("").trim().length);
     if ([...wordInput].join("").trim().length === 5) {
       if (event.keyCode == 13 || event.which == 13 || event.key == "Enter") {
         // enter key
@@ -175,7 +176,7 @@ function Input() {
     <AnimatePresence>
       <button
         className="fixed top-5 right-5 bg-slate-600 text-white py-2 px-4 rounded-md shadow-lg"
-        onTouchStart={() => checkEnterKey({ key: "Enter" })}
+        onClick={() => checkEnterKey({ key: "Enter" })}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
