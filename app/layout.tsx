@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>{children}</body>
       <Script
-        src="https://tools.luckyorange.com/core/lo.js?site-id=cdd7c3a6"
+        src="https://tools.luckyorange.com/core/lo.js?site-id=8ab21b37"
         strategy="afterInteractive"
         async
         defer
